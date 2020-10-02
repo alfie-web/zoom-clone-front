@@ -1,0 +1,124 @@
+@import '~reset-css'
+@import '~antd/dist/antd.css'
+@import './vars'
+
+	
+* 
+	&::-webkit-scrollbar
+		width: 3px
+		height: 3px
+		border-radius: 3px
+
+	&::-webkit-scrollbar-button
+		background-color: #d0dae5
+		display: none
+	&::-webkit-scrollbar-track
+		box-sizing: border-box
+		background-color: #d0dae5
+	&::-webkit-scrollbar-track-piece
+		background-color: $bg
+		// background-color: $black
+
+
+	&::-webkit-scrollbar-thumb
+		height: 50px
+		background-color: #d0dae5
+		border-radius: 3px
+		transition: background-color .3s
+
+	&::-webkit-scrollbar-thumb:vertical:hover
+		background-color: $gray
+		
+	&::-webkit-scrollbar-corner
+		background-color: #d0dae5
+	&::-webkit-resizer
+		background-color: #d0dae5
+
+::selection 
+	background: $light
+	color: $black
+	
+body 
+	margin: 0
+	font: 18px/30px $regular
+	color: $black
+
+	
+
+main
+	min-height: 100vh
+
+section
+	padding: 150px 0 90px
+
+.container
+	width: 97%
+	max-width: 1140px
+	margin: 0 auto
+
+.box
+	width: 100%
+	display: flex
+	justify-content: space-between
+	align-items: flex-end
+	margin-bottom: 30px
+
+.title
+	position: relative
+	display: block
+	color: $black
+	transition: color .2s 
+
+	&--big
+		font: 36px $bold
+
+	&--normal
+		font: 30px $bold
+
+	&--small
+		font: 24px $bold
+
+	&--count
+		color: $gray
+		font-size: 18px
+
+
+.link
+	color: $black
+	text-decoration: none
+	transition: color .2s
+
+	&:hover, &--active
+		color: $violet !important
+
+	&--line
+		&:hover, &--active
+			text-decoration: underline
+
+
+
+
+.Lazy
+	position: relative
+	width: 100%
+	height: 20px
+
+
+
+
+
+.Page
+	padding-top: 90px
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 1024px)
+	.container
+		width: 90%

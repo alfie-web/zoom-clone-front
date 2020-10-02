@@ -1,0 +1,117 @@
+@import '../../layouts/vars'
+
+.Button
+	$self: &
+	position: relative
+	display: inline-block
+	padding: 15px 30px 16px
+	box-sizing: border-box
+	border-radius: 30px
+	outline: none
+	border: none
+	font: 18px $regular
+	cursor: pointer
+	color: $black
+	background: none
+	transition: color .2s, background-color .2s
+
+	&::before
+		content: ''
+		position: absolute
+		width: 100%
+		height: 100%
+		top: 0
+		left: 0
+		border-radius: 30px
+		background-color: rgba(237, 243, 251, .4)
+		// z-index: -1
+		transition: background .3s
+
+	&:active
+		&::before
+			transform: scale(0.97)
+
+	&:hover
+		color: white
+		&::before
+			background-color: $red
+
+
+	&__icon
+		display: flex
+		svg
+			// height: 24px
+			width: auto
+
+	&--icon
+		display: flex
+		align-items: center
+		justify-content: center
+		padding: 0
+		background: none
+		outline: none
+		cursor: pointer
+		z-index: 10
+		transition: border .2s
+
+		&::before
+			display: none
+
+		&:hover
+			svg
+				fill: $red
+
+		svg
+			fill: $black
+			transition: fill .2s
+
+	span
+		position: relative
+		z-index: 10
+
+
+	&--active
+		#{$self}__icon
+			svg
+				fill: $violet
+
+	&--disabled
+		background-color: $gray
+		pointer-events: none
+		user-select: none
+
+		svg
+			fill: $gray !important
+
+
+
+
+	&--gray
+		color: white
+		&::before
+			background-color: $gray
+		&:hover, &.Button--active
+			&::before
+				background-color: $red
+
+	&--violet
+		color: white
+		&::before
+			// background: linear-gradient(-45deg, #FFA63D, #FF3D77, #338AFF, #3CF0C5)
+			// background: linear-gradient(-45deg, #530068, $dark-violet, $violet, #DE5CFF)
+			background: linear-gradient(-45deg, #d543fa, #c112ec, #960bb9, #8d02af)
+			// background: linear-gradient(-45deg, #530068, $dark-violet, $violet)
+			// background-color: #000
+			background-size: 200% auto;
+			
+		&:hover, &.Button--active
+			&::before
+				// background-color: $red
+				// background-position 0% 50%
+				background-position: right center
+	
+	
+.Button.Button--disabled.Button--icon
+	background-color: transparent !important
+	
+	

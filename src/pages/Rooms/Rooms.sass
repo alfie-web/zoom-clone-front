@@ -1,0 +1,59 @@
+@import '../../layouts/vars'
+
+.Rooms
+	background-color: $bg
+
+	&__items
+		display: flex
+		flex-wrap: wrap
+		margin: 0 -10px
+
+
+.RoomCard
+	position: relative
+	width: calc(100% / 3 - 20px)
+	margin: 0 10px 20px
+	background-color: #fff
+	border-radius: 10px
+	min-height: 230px
+	padding: 25px 30px 80px
+	box-sizing: border-box
+	transition: box-shadow .2s
+
+	&:hover
+		box-shadow: 0 14px 32px 0 rgba(10, 12, 15, .03)
+
+	&__title
+		width: 80%
+
+	&__count, &__date
+		font: 16px $regular
+
+	&__count
+		color: $gray
+		margin-top: 7px
+
+	&__date
+		position: absolute
+		display: flex
+		align-items: center
+		bottom: 25px
+		left: 30px
+
+		svg
+			fill: $violet
+			width: auto
+
+		span
+			transform: translateY(2px)
+			margin-left: 15px
+			color: $violet
+
+
+@media only screen and (max-width: 970px)
+	.RoomCard
+		width: calc(50% - 20px)
+
+@media only screen and (max-width: 660px)
+	.RoomCard
+		width: calc(100% - 20px)
