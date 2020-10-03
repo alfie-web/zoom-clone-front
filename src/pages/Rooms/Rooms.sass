@@ -10,6 +10,7 @@
 
 
 .RoomCard
+	$self: &
 	position: relative
 	width: calc(100% / 3 - 20px)
 	margin: 0 10px 20px
@@ -23,6 +24,9 @@
 	&:hover
 		box-shadow: 0 14px 32px 0 rgba(10, 12, 15, .03)
 
+		#{$self}__count
+			color: $black
+
 	&__title
 		width: 80%
 
@@ -32,6 +36,7 @@
 	&__count
 		color: $gray
 		margin-top: 7px
+		transition: color .2s
 
 	&__date
 		position: absolute

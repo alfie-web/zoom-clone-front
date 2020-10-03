@@ -1,37 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
+import { roomsActions } from '../../store/actions';
 import { Button, RoomCard } from '../../components';
+
+// import socket from '../../api/socket';
 
 import './Rooms.sass';
 
 
-const MOCK_DATA = [
-	{
-		_id: 1,
-		title: 'Front-end митап',
-		usersCount: 12,
-		date: "2020-10-01T20:39:46.000Z"
-	},
-	{
-		_id: 2,
-		title: 'Native-speacker по английскому',
-		usersCount: 2,
-		date: "2020-10-02T14:39:46.000Z"
-	},
-	{
-		_id: 3,
-		title: 'Пишпек балбесы',
-		usersCount: 5,
-		date: "2020-10-03T12:39:46.000Z"
-	},
-]
+const Rooms = ({ items, fetchRooms }) => {
 
-export default function Rooms() {
+	useEffect(() => {
+		!items.length && fetchRooms();
+	}, [items, fetchRooms])
+
+	// useEffect(() => {
+	// 	console.log('ХУЙ ЗНАЕТ НО ПЕРЗАПУСКАЕТСЯ')
+	// 	socket.on('ROOM:USERS_INFO', data => {
+	// 		console.log('Пользователей в комнате', data)
+	// 		// setCurrentRoomUsers(data.users)
+	// 	})
+
+	// 	// return () => socket.emit("ROOM:LEAVE");
+	// }, [])
+
 	return (
 		<main className="Page Rooms">
 			<div className="container">
 				<div className="box">
-					<h1 className="title title--big">Конференции <sup className="title--count">{MOCK_DATA.length}</sup></h1>
+					<h1 className="title title--big">Конференции <sup className="title--count">{items.length}</sup></h1>
 
 					<Button 
 						text="Новая конференция"
@@ -41,12 +39,12 @@ export default function Rooms() {
 
 				<div className="Rooms__items">
 					{
-						MOCK_DATA && MOCK_DATA.map(item => (
+						items && items.map(item => (
 							<RoomCard 
 								key={item._id}
 								_id={item._id}
 								title={item.title}
-								usersCount={item.usersCount}
+								usersCount={item.users.length}
 								date={item.date}
 							/>
 						))
@@ -57,3 +55,10 @@ export default function Rooms() {
 		</main>
 	)
 }
+
+export default connect(
+	({ rooms }) => ({ items: rooms.items }),
+	{
+		fetchRooms: roomsActions.fetchRooms
+	}
+)(Rooms);

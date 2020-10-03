@@ -40,7 +40,7 @@ api.interceptors.request.use(async function (config) {
 				const data = await response.json();
 
 				if (data.status === 'success') {
-					console.log(config)
+					// console.log(config)
 					localStorage.setItem('tokens', JSON.stringify(data.data));
 					// api.defaults.headers.common['token'] = data.data.accessToken || '';		// Это не сработает
 					config.headers.token = data.data.accessToken || '';
