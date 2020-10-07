@@ -26,6 +26,21 @@ const roomsReducer = (state = initialState, { type, payload }) => {
 				currentRoomUsers: payload
 			}
 
+		case 'ROOMS:SET_NEW_USER':
+			return {
+				...state,
+				currentRoomUsers: [
+					...state.currentRoomUsers,
+					payload
+				]
+			}
+
+		case 'ROOMS:REMOVE_USER':
+			return {
+				...state,
+				currentRoomUsers: state.currentRoomUsers.filter(u => u.userId !== payload.userId)
+			}
+
 		case 'ROOMS:SET_ITEMS':
 			return {
 				...state,

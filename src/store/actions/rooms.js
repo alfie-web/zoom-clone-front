@@ -21,6 +21,16 @@ const roomsActions = {
 		payload: data
 	}),
 
+	setNewUser: user => ({
+		type: 'ROOMS:SET_NEW_USER',
+		payload: user
+	}),
+
+	removeUser: user => ({
+		type: 'ROOMS:REMOVE_USER',
+		payload: user
+	}),
+
 
 	fetchRooms: () => async dispatch => {
 		dispatch(roomsActions.setIsFetching(true));
@@ -58,6 +68,14 @@ const roomsActions = {
 
 	setCurrentRoomUsers: (users) => dispatch => {
 		dispatch(roomsActions.setCurrentRoomUsersAC(users));
+	},
+
+	addNewUserToRoom: (user) => dispatch => {
+		dispatch(roomsActions.setNewUser(user));
+	},
+
+	removeUserFromRoom: (user) => dispatch => {
+		dispatch(roomsActions.removeUser(user));
 	}
 }
 
