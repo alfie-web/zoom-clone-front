@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { roomsActions } from '../../store/actions';
@@ -6,10 +6,14 @@ import { Button, RoomCard } from '../../components';
 
 // import socket from '../../api/socket';
 
+import useFullscreen from '../../helpers/useFullscreen';
+
 import './Rooms.sass';
 
 
 const Rooms = ({ items, fetchRooms }) => {
+	// const ref = useRef()
+	// const {isFullscreen, handleFullscreen} = useFullscreen(ref);
 
 	useEffect(() => {
 		!items.length && fetchRooms();
@@ -30,10 +34,12 @@ const Rooms = ({ items, fetchRooms }) => {
 			<div className="container">
 				<div className="box">
 					<h1 className="title title--big">Конференции <sup className="title--count">{items.length}</sup></h1>
-
+					
 					<Button 
+						// text={!isFullscreen ? "Новая конференция" : 'fff'}
 						text="Новая конференция"
 						variant="violet"
+						// onClick={handleFullscreen}
 					/>
 				</div>
 

@@ -7,13 +7,68 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import socket from '../../api/socket';
 
-import { VideoCard, BottomBar } from './components';
+import { Button } from '../../components';
+import { VideoCard, BottomBar, RoomInfo } from './components';
+import useFullscreen from '../../helpers/useFullscreen';
 
 import './Room.sass';
 
 
-const Room = (props) => {
-	// const currentUser = sessionStorage.getItem('user');
+const UserVideo = ({ peers, peer, arr }) => {
+	const ref = useRef();
+	const {isFullscreen, handleFullscreen} = useFullscreen(ref);
+
+	return (
+		<div
+			// className={`width-peer${peers.length > 8 ? '' : peers.length}`}
+			className={classNames('Room__video', {
+				'Room__video--big': peers.length < 3,
+				'Room__video--small': peers.length > 6
+			})}
+			ref={ref}
+		>
+			
+			{/* Это если видео скрыто */}
+			{/* if (!userVideoAudio[userName].video) && <p className="Room__video-fullname">{peer.userName}</p> */}
+
+			<p className="Room__video-fullname">{peer.userName}</p>
+
+			<Button 
+				className="Room__video-fullscreen"
+				icon={ !isFullscreen 
+					? <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M7.09766 21.2031H2.69531C2.19991 21.2031 1.79688 20.8001 1.79688 20.3047V16.0371C1.79688 15.5409 1.39464 15.1387 0.898438 15.1387C0.40223 15.1387 0 15.5409 0 16.0371V20.3047C0 21.7909 1.20912 23 2.69531 23H7.09766C7.59386 23 7.99609 22.5978 7.99609 22.1016C7.99609 21.6054 7.59386 21.2031 7.09766 21.2031Z" fill="white" />
+						<path d="M0.898438 7.90625C1.39464 7.90625 1.79688 7.50402 1.79688 7.00781V2.69531C1.79688 2.19991 2.19991 1.79688 2.69531 1.79688H7.09766C7.59386 1.79688 7.99609 1.39464 7.99609 0.898438C7.99609 0.40223 7.59386 0 7.09766 0H2.69531C1.20912 0 0 1.20912 0 2.69531V7.00781C0 7.50402 0.40223 7.90625 0.898438 7.90625Z" fill="white" />
+						<path d="M20.3047 0H15.9023C15.4061 0 15.0039 0.40223 15.0039 0.898438C15.0039 1.39464 15.4061 1.79688 15.9023 1.79688H20.3047C20.8001 1.79688 21.2031 2.19991 21.2031 2.69531V7.00781C21.2031 7.50402 21.6054 7.90625 22.1016 7.90625C22.5978 7.90625 23 7.50402 23 7.00781V2.69531C23 1.20912 21.7909 0 20.3047 0Z" fill="white" />
+						<path d="M22.1016 15.1387C21.6054 15.1387 21.2031 15.5409 21.2031 16.0371V20.3047C21.2031 20.8001 20.8001 21.2031 20.3047 21.2031H15.9023C15.4061 21.2031 15.0039 21.6054 15.0039 22.1016C15.0039 22.5978 15.4061 23 15.9023 23H20.3047C21.7909 23 23 21.7909 23 20.3047V16.0371C23 15.5409 22.5978 15.1387 22.1016 15.1387Z" fill="white" />
+					</svg>
+					: <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<g clipPath="url(#clip5)">
+							<path d="M0.898438 16.9355L5.30078 16.9355C5.79618 16.9355 6.19922 17.3386 6.19922 17.834L6.19922 22.1016C6.19922 22.5978 6.60145 23 7.09766 23C7.59386 23 7.99609 22.5978 7.99609 22.1016L7.99609 17.834C7.99609 16.3478 6.78698 15.1387 5.30078 15.1387L0.898438 15.1387C0.402231 15.1387 6.52095e-07 15.5409 6.08715e-07 16.0371C5.65335e-07 16.5333 0.402231 16.9355 0.898438 16.9355Z" fill="white" />
+							<path d="M7.09766 7.85439e-08C6.60145 1.21924e-07 6.19922 0.402231 6.19922 0.898438L6.19922 5.21094C6.19922 5.70634 5.79618 6.10938 5.30078 6.10938L0.898437 6.10938C0.40223 6.10938 -1.21924e-07 6.51161 -7.85439e-08 7.00781C-3.51641e-08 7.50402 0.40223 7.90625 0.898438 7.90625L5.30078 7.90625C6.78698 7.90625 7.99609 6.69713 7.99609 5.21094L7.99609 0.898438C7.99609 0.40223 7.59386 3.51641e-08 7.09766 7.85439e-08Z" fill="white" />
+							<path d="M17.6992 7.90625L22.1016 7.90625C22.5978 7.90625 23 7.50402 23 7.00781C23 6.51161 22.5978 6.10937 22.1016 6.10937L17.6992 6.10937C17.2038 6.10937 16.8008 5.70634 16.8008 5.21094L16.8008 0.898437C16.8008 0.40223 16.3986 -5.77117e-07 15.9023 -6.20497e-07C15.4061 -6.63877e-07 15.0039 0.40223 15.0039 0.898437L15.0039 5.21094C15.0039 6.69713 16.213 7.90625 17.6992 7.90625Z" fill="white" />
+							<path d="M15.9023 23C16.3986 23 16.8008 22.5978 16.8008 22.1016L16.8008 17.834C16.8008 17.3386 17.2038 16.9355 17.6992 16.9355L22.1016 16.9355C22.5978 16.9355 23 16.5333 23 16.0371C23 15.5409 22.5978 15.1387 22.1016 15.1387L17.6992 15.1387C16.213 15.1387 15.0039 16.3478 15.0039 17.834L15.0039 22.1016C15.0039 22.5978 15.4061 23 15.9023 23Z" fill="white" />
+						</g>
+						<defs>
+							<clipPath id="clip5">
+								<rect width="23" height="23" fill="white" />
+							</clipPath>
+						</defs>
+					</svg>
+				}
+				onClick={handleFullscreen}
+				// onClick={() => setIsFullscreen(!isFullscreen)} 
+				// onClick={expandScreen} 
+			/>
+			
+			{/* <VideoCard key={index} peer={peer} number={arr.length} /> */}
+			<VideoCard peer={peer} number={arr.length} />
+		</div>
+	)
+}
+
+
+const Room = () => {
 	const { curUser } = useSelector(state => state.users);
 	const [peers, setPeers] = useState([]);
 	const [userVideoAudio, setUserVideoAudio] = useState({
@@ -26,6 +81,12 @@ const Room = (props) => {
 	const screenTrackRef = useRef();
 	const userStream = useRef();
 	const { roomId } = useParams();
+
+	// const [isFullscreen, setIsFullscreen] = useState(false);
+	// const handleFullscreen = useFullScreenHandle();
+
+	// const {isFullscreen, handleFullscreen} = useFullscreen(ref);
+
 
 	useEffect(() => {
 		// Set Back Button Event
@@ -179,27 +240,44 @@ const Room = (props) => {
 		return peersRef.current.find((p) => p.peerID === id);
 	}
 
-	function createUserVideo(peer, index, arr) {
-		return (
-			<div
-				// className={`width-peer${peers.length > 8 ? '' : peers.length}`}
-				className={classNames('Room__video', {
-					'Room__video--big': peers.length < 3,
-					'Room__video--small': peers.length > 6
-				})}
-				onClick={expandScreen}
-				key={index}
-			>
+	// Вынести в отдельный компонент
+	// function createUserVideo(peer, index, arr) {
+	// 	return (
+	// 		<div
+	// 			// className={`width-peer${peers.length > 8 ? '' : peers.length}`}
+	// 			className={classNames('Room__video', {
+	// 				'Room__video--big': peers.length < 3,
+	// 				'Room__video--small': peers.length > 6
+	// 			})}
+	// 			// onClick={expandScreen}
+	// 			key={index}
+	// 		>
 				
-				{/* Это если видео скрыто */}
-				{/* if (!userVideoAudio[userName].video) && <p className="Room__video-fullname">{peer.userName}</p> */}
+	// 			{/* Это если видео скрыто */}
+	// 			{/* if (!userVideoAudio[userName].video) && <p className="Room__video-fullname">{peer.userName}</p> */}
 
-				<p className="Room__video-fullname">{peer.userName}</p>
+	// 			<p className="Room__video-fullname">{peer.userName}</p>
+
+	// 			<Button 
+	// 				className="Room__video-fullscreen"
+	// 				icon={
+	// 					<svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+	// 						<path d="M7.09766 21.2031H2.69531C2.19991 21.2031 1.79688 20.8001 1.79688 20.3047V16.0371C1.79688 15.5409 1.39464 15.1387 0.898438 15.1387C0.40223 15.1387 0 15.5409 0 16.0371V20.3047C0 21.7909 1.20912 23 2.69531 23H7.09766C7.59386 23 7.99609 22.5978 7.99609 22.1016C7.99609 21.6054 7.59386 21.2031 7.09766 21.2031Z" fill="white" />
+	// 						<path d="M0.898438 7.90625C1.39464 7.90625 1.79688 7.50402 1.79688 7.00781V2.69531C1.79688 2.19991 2.19991 1.79688 2.69531 1.79688H7.09766C7.59386 1.79688 7.99609 1.39464 7.99609 0.898438C7.99609 0.40223 7.59386 0 7.09766 0H2.69531C1.20912 0 0 1.20912 0 2.69531V7.00781C0 7.50402 0.40223 7.90625 0.898438 7.90625Z" fill="white" />
+	// 						<path d="M20.3047 0H15.9023C15.4061 0 15.0039 0.40223 15.0039 0.898438C15.0039 1.39464 15.4061 1.79688 15.9023 1.79688H20.3047C20.8001 1.79688 21.2031 2.19991 21.2031 2.69531V7.00781C21.2031 7.50402 21.6054 7.90625 22.1016 7.90625C22.5978 7.90625 23 7.50402 23 7.00781V2.69531C23 1.20912 21.7909 0 20.3047 0Z" fill="white" />
+	// 						<path d="M22.1016 15.1387C21.6054 15.1387 21.2031 15.5409 21.2031 16.0371V20.3047C21.2031 20.8001 20.8001 21.2031 20.3047 21.2031H15.9023C15.4061 21.2031 15.0039 21.6054 15.0039 22.1016C15.0039 22.5978 15.4061 23 15.9023 23H20.3047C21.7909 23 23 21.7909 23 20.3047V16.0371C23 15.5409 22.5978 15.1387 22.1016 15.1387Z" fill="white" />
+	// 					</svg>
+
+	// 				}
+	// 				// onClick={handleFullscreen.enter}
+	// 				// onClick={() => setIsFullscreen(!isFullscreen)} 
+	// 				onClick={expandScreen} 
+	// 			/>
 				
-				<VideoCard key={index} peer={peer} number={arr.length} />
-			</div>
-		);
-	}
+	// 			<VideoCard key={index} peer={peer} number={arr.length} />
+	// 		</div>
+	// 	);
+	// }
 
 
 
@@ -290,6 +368,7 @@ const Room = (props) => {
 		}
 	};
 
+	// TODO: Вынести эту штуку в видео компонент
 	const expandScreen = (e) => {
 		const elem = e.target;
 
@@ -307,11 +386,37 @@ const Room = (props) => {
 		}
 	};
 
+	// const expandScreen = (e) => {
+	// 	const elem = e.target;
+
+	// 	if (!isFullscreen) {
+	// 		if (elem.requestFullscreen) {
+	// 			elem.requestFullscreen();
+	// 		} else if (elem.mozRequestFullScreen) {
+	// 			/* Firefox */
+	// 			elem.mozRequestFullScreen();
+	// 		} else if (elem.webkitRequestFullscreen) {
+	// 			/* Chrome, Safari & Opera */
+	// 			elem.webkitRequestFullscreen();
+	// 		} else if (elem.msRequestFullscreen) {
+	// 			/* IE/Edge */
+	// 			elem.msRequestFullscreen();
+	// 		}
+	// 	} else {
+	// 		document.exitFullscreen();
+	// 	}
+
+	// 	setIsFullscreen(!isFullscreen);
+	// };
+
 	return (
 		<main className="Page Room">
 			<div className="container">
+				<RoomInfo roomId={roomId} />
+
 				<div className="Room__videocams">
 					{/* Current User Video */}
+					{/* Вынести в отдельный компонент */}
 					<div
 						// className={`width-peer${peers.length > 8 ? '' : peers.length}`}
 						className={classNames('Room__video Room__video--my', {
@@ -338,7 +443,15 @@ const Room = (props) => {
 
 					{/* Joined Users Video */}
 					{peers &&
-						peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+						// peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+						peers.map((peer, index, arr) => (
+							<UserVideo 
+								key={index}
+								peer={peer}
+								peers={peers}
+								arr={arr}
+							/>
+						))}
 				</div>
 		
 		
@@ -357,8 +470,8 @@ const Room = (props) => {
 	);
 };
 
-
 export default Room;
+
 
 
 

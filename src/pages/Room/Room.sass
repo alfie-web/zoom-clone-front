@@ -32,12 +32,19 @@
 			font: 18px $bold
 			color: white 
 
+		&-fullscreen
+			position: absolute
+			z-index: 10
+			right: 30px
+			top: 20px
+
+
 		&--small
 			width: calc(25% - 20px)
 
 		&--big
 			width: calc(50% - 20px)
-			// height: 350px
+			// width: calc(100% / 3 - 20px)
 
 
 
@@ -81,3 +88,13 @@
 				&::before
 					// background: linear-gradient(-45deg, #d543fa, #c112ec, #960bb9, #8d02af) !important
 					background: $violet
+
+
+
+
+
+	
+
+	&__info
+		h1
+			color: white
