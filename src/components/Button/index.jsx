@@ -14,7 +14,8 @@ export default function Button({
 	active = false,
 	disabled,
 	urlRedirect,	// если хотим использовать как ссылку
-	title = ''
+	title = '',
+	rounded
 }) {
 	const history = useHistory();
 
@@ -27,6 +28,7 @@ export default function Button({
 				'Button--icon': icon,
 				'Button--active': active,
 				'Button--disabled': disabled,
+				'Button--rounded': rounded,
 			}, className)}
 			onClick={
 				// !disabled ? onClick : () => {}

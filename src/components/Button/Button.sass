@@ -13,7 +13,7 @@
 	cursor: pointer
 	color: $black
 	background: none
-	transition: color .2s, background-color .2s
+	transition: color .2s, background .2s
 
 	&::before
 		content: ''
@@ -34,7 +34,8 @@
 	&:hover
 		color: white
 		&::before
-			background-color: $red
+			// background-color: $red
+			// background: linear-gradient(-45deg, #d543fa, #c112ec, #960bb9, #8d02af)
 
 
 	&__icon
@@ -43,7 +44,7 @@
 			// height: 24px
 			width: auto
 
-	&--icon
+	&--icon:not(&--rounded)
 		display: flex
 		align-items: center
 		justify-content: center
@@ -68,6 +69,23 @@
 	span
 		position: relative
 		z-index: 10
+
+
+
+	&--rounded
+		width: 55px
+		height: 55px
+		padding: 0
+
+		#{$self}__icon
+			position: absolute
+			top: 50%
+			left: 50%
+			transform: translate(-50%, -50%)
+
+		// &::before
+
+
 
 
 	&--active

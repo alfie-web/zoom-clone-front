@@ -1,6 +1,83 @@
-
+@import '../../layouts/vars'
 
 .Room
-	&__videos
+	background-color: $black
+	padding-bottom: 90px
+
+	&__videocams
 		display: flex
 		flex-wrap: wrap
+		margin: 0 -10px
+		padding-bottom: 70px
+
+	&__video
+		display: flex
+		position: relative
+		overflow: hidden
+		border-radius: 10px
+		// background-color: $light
+		margin: 0 10px 20px
+		width: calc(100% / 3 - 20px)
+
+		video
+			width: 100%
+			height: auto
+			pointer-events: none
+
+		&-fullname
+			position: absolute
+			z-index: 10
+			left: 30px
+			top: 15px
+			font: 18px $bold
+			color: white 
+
+		&--small
+			width: calc(25% - 20px)
+
+		&--big
+			width: calc(50% - 20px)
+			// height: 350px
+
+
+
+
+	&__controls
+		position: fixed
+		left: 0
+		bottom: 40px
+
+		margin-top: 20px
+		z-index: 100
+		width: 100%
+
+		.container
+			display: flex
+			justify-content: space-between
+
+			.Button
+				margin: 0 10px
+
+		&-left, &-center, &-right
+			display: flex
+			align-items: center
+
+		&-left
+			margin-left: -10px
+		&-right
+			margin-right: -10px
+
+
+		&-btn
+			color: white
+			// transition: .2s 
+			svg
+				fill: white
+			&:before
+				background: rgba(255, 255, 255, .1)
+				// transition: .2s 
+
+			&:hover
+				&::before
+					// background: linear-gradient(-45deg, #d543fa, #c112ec, #960bb9, #8d02af) !important
+					background: $violet
