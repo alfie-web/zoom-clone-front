@@ -1,33 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { roomsActions } from '../../store/actions';
 import { Button, RoomCard } from '../../components';
 
-// import socket from '../../api/socket';
 
-import useFullscreen from '../../helpers/useFullscreen';
 
 import './Rooms.sass';
 
 
 const Rooms = ({ items, fetchRooms }) => {
-	// const ref = useRef()
-	// const {isFullscreen, handleFullscreen} = useFullscreen(ref);
 
 	useEffect(() => {
 		!items.length && fetchRooms();
 	}, [items, fetchRooms])
 
-	// useEffect(() => {
-	// 	console.log('ХУЙ ЗНАЕТ НО ПЕРЗАПУСКАЕТСЯ')
-	// 	socket.on('ROOM:USERS_INFO', data => {
-	// 		console.log('Пользователей в комнате', data)
-	// 		// setCurrentRoomUsers(data.users)
-	// 	})
-
-	// 	// return () => socket.emit("ROOM:LEAVE");
-	// }, [])
 
 	return (
 		<main className="Page Rooms">

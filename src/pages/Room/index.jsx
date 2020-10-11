@@ -13,11 +13,12 @@ import useFullscreen from '../../helpers/useFullscreen';
 
 import './Room.sass';
 
+// TODO: Посмотреть решение проблемы с шумом тут https://overcoder.net/q/1218879/%D1%88%D1%83%D0%BC-%D1%8D%D1%85%D0%BE-%D0%B2-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE%D1%87%D0%B0%D1%82%D0%B5-webrtc
 
 const FullscreenModeButton = ({ isFullscreen, handleFullscreen }) => {
 	return (
 		<Button
-			className="Room__video-fullscreen"
+			className="Room__video-fullscreen Room__video-btn"
 			icon={!isFullscreen
 				? <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M7.09766 21.2031H2.69531C2.19991 21.2031 1.79688 20.8001 1.79688 20.3047V16.0371C1.79688 15.5409 1.39464 15.1387 0.898438 15.1387C0.40223 15.1387 0 15.5409 0 16.0371V20.3047C0 21.7909 1.20912 23 2.69531 23H7.09766C7.59386 23 7.99609 22.5978 7.99609 22.1016C7.99609 21.6054 7.59386 21.2031 7.09766 21.2031Z" fill="white" />
@@ -124,21 +125,33 @@ const Room = () => {
 	const userStream = useRef();
 	const { roomId } = useParams();
 
-
+	console.log('RENDERS')
+	// BackButton
+	// const goToBack = React.useCallback((e) => {
+	// 	console.log('Выходим назад')
+	// 	e && e.preventDefault();
+	// 	socket.emit('BE-leave-room', { roomId, leaver: curUser.fullname });
+	// 	// sessionStorage.removeItem('user');
+	// 	window.location.href = '/';
+	// }, [roomId, curUser.fullname]);
 
 	useEffect(() => {
 		// Set Back Button Event
-		window.addEventListener('popstate', goToBack);
+		// window.addEventListener('popstate', goToBack);
+		
 
 		// Connect Camera & Mic
 		navigator.mediaDevices
 			.getUserMedia({ video: true, audio: true })
 			.then((stream) => {
+				console.log('update')
 				userVideoRef.current.srcObject = stream;
 				userStream.current = stream;
 
 				socket.emit('BE-join-room', { roomId, userName: curUser.fullname });
+
 				socket.on('FE-user-join', (users) => {
+					console.log('FE-user-join')
 					// all users
 					const peers = [];
 					users.forEach(({ userId, info }) => {
@@ -201,6 +214,7 @@ const Room = () => {
 				});
 
 				socket.on('FE-user-leave', ({ userId, userName }) => {
+					console.log('FE-user-leave')
 					const peerIdx = findPeer(userId);
 					peerIdx.peer.destroy();
 					setPeers((users) => {
@@ -228,10 +242,19 @@ const Room = () => {
 		});
 
 		return () => {
+			console.log('unmount')
+			// socket.emit('BE-leave-room', { roomId, leaver: curUser.fullname });
+			// goToBack()
+
+			socket.emit('BE-leave-room', { roomId, leaver: curUser.fullname });
+
 			socket.disconnect();
+
+			// window.history.back();
+			window.location.href = '/';
 		};
-		// eslint-disable-next-line
-	}, []);
+	}, [roomId, curUser.fullname]);
+	// }, [roomId, curUser.fullname, goToBack]);
 
 	// TODO: Сделать addOrCreatePeer
 	function createPeer(userId, caller, stream) {
@@ -286,13 +309,7 @@ const Room = () => {
 	// 	setDisplayChat(!displayChat);
 	// };
 
-	// BackButton
-	const goToBack = (e) => {
-		e.preventDefault();
-		socket.emit('BE-leave-room', { roomId, leaver: curUser.fullname });
-		// sessionStorage.removeItem('user');
-		// window.location.href = '/';
-	};
+	
 
 	const toggleCameraAudio = (switchType) => {
 		setUserVideoAudio((preList) => {
@@ -396,7 +413,7 @@ const Room = () => {
 			<BottomBar
 				clickScreenSharing={clickScreenSharing}
 				// clickChat={clickChat}
-				goToBack={goToBack}
+				// goToBack={goToBack}
 				toggleCameraAudio={toggleCameraAudio}
 				userVideoAudio={userVideoAudio['localUser']}
 				screenShare={screenShare}

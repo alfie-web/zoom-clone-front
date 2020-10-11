@@ -15,7 +15,9 @@ const BottomBar = ({
 			<div className="container">
 			<div className="Room__controls-left">
 				<Button 
-					onClick={goToBack}
+					// onClick={goToBack}
+					onClick={() => window.history.back()}
+					// onClick={() => window.location.href = '/'}
 					text="Выйти из конференции"
 					// className="Room__controls-btn"
 					variant="violet"
