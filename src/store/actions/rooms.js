@@ -49,20 +49,29 @@ const roomsActions = {
 		}
 	},
 
-	fetchCurrentRoom: roomId => async dispatch => {
+	fetchCurrentRoom: roomId => async (dispatch, getState) => {
+		const { users } = getState();
+		console.log('curUser', users.curUser)
 		dispatch(roomsActions.setIsFetching(true));
 
 		try {
 			const { data } = await roomsAPI.getById(roomId);
 
 			if (data.status === 'success') {
+				if (data.data.users.includes(users.curUser._id)) {
+					console.log('Есть')
+				} else {
+					console.log('НЕТУ')
+					window.location.href = '/'
+				}
+
 				dispatch(roomsActions.setCurrentRoom(data.data));
 			}
 
-			dispatch(roomsActions.setIsFetching(false));
+			return dispatch(roomsActions.setIsFetching(false));
 
 		} catch (e) {
-			dispatch(roomsActions.setIsFetching(false));
+			return dispatch(roomsActions.setIsFetching(false));
 		}
 	},
 

@@ -16,18 +16,30 @@
 		position: relative
 		overflow: hidden
 		border-radius: 10px
-		// background-color: $light
 		margin: 0 10px 20px
 		width: calc(100% / 3 - 20px)
 
 		&:hover
-			#{$video}-btn
+			#{$video}-options
 				opacity: 1
 
 		video
 			width: 100%
 			height: auto
 			pointer-events: none
+
+		&-options
+			position: absolute
+			width: 100%
+			top: 0
+			left: 0
+			right: 0
+			padding: 20px 30px
+			display: flex
+			justify-content: flex-end
+			background: linear-gradient(to bottom, rgba(10,12,15,0.3) 0%, rgba(255,255,255,0) 100%)
+			opacity: 0
+			transition: opacity .2s
 
 		&-fullname
 			position: absolute
@@ -37,15 +49,9 @@
 			font: 18px $bold
 			color: white 
 
-		&-btn
-			opacity: 0
-			transition: opacity .2s
+		// &-btn
+			
 
-		&-fullscreen
-			position: absolute
-			z-index: 10
-			right: 30px
-			top: 20px
 
 
 		&--small

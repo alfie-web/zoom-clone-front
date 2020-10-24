@@ -14,6 +14,7 @@ import useFullscreen from '../../helpers/useFullscreen';
 import './Room.sass';
 
 // TODO: Посмотреть решение проблемы с шумом тут https://overcoder.net/q/1218879/%D1%88%D1%83%D0%BC-%D1%8D%D1%85%D0%BE-%D0%B2-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE%D1%87%D0%B0%D1%82%D0%B5-webrtc
+// TODO: Как-то  валидировать пользователя, есть ли он в списке приглашенных (как вар в RoomInfo)
 
 const FullscreenModeButton = ({ isFullscreen, handleFullscreen }) => {
 	return (
@@ -64,10 +65,12 @@ const CurrentUserVideo = ({ userVideoRef, peers, curUser }) => {
 
 			<p className="Room__video-fullname">{curUser.fullname}</p>
 
-			<FullscreenModeButton 
-				isFullscreen={isFullscreen}
-				handleFullscreen={handleFullscreen}
-			/>
+			<div className="Room__video-options">
+				<FullscreenModeButton 
+					isFullscreen={isFullscreen}
+					handleFullscreen={handleFullscreen}
+				/>
+			</div>
 
 			<video
 				ref={userVideoRef}
@@ -94,13 +97,15 @@ const UserVideo = ({ peers, peer }) => {
 			
 			{/* Это если видео скрыто */}
 			{/* if (!userVideoAudio[userName].video) && <p className="Room__video-fullname">{peer.userName}</p> */}
-
 			<p className="Room__video-fullname">{peer.userName}</p>
 
-			<FullscreenModeButton 
-				isFullscreen={isFullscreen}
-				handleFullscreen={handleFullscreen}
-			/>
+			<div className="Room__video-options">
+				<FullscreenModeButton 
+					isFullscreen={isFullscreen}
+					handleFullscreen={handleFullscreen}
+				/>
+			</div>
+
 
 			<VideoCard peer={peer} />
 		</div>
@@ -148,25 +153,27 @@ const Room = () => {
 				userVideoRef.current.srcObject = stream;
 				userStream.current = stream;
 
-				socket.emit('BE-join-room', { roomId, userName: curUser.fullname });
+				socket.emit('BE-join-room', { roomId, userName: curUser.fullname, userId: curUser._id });
 
 				socket.on('FE-user-join', (users) => {
 					console.log('FE-user-join')
 					// all users
 					const peers = [];
-					users.forEach(({ userId, info }) => {
-						let { userName, video, audio } = info;
+					users.forEach(({ socketId, info }) => {
+						let { userName, video, audio, userId } = info;
 
 						if (userName !== curUser.fullname) {
-							const peer = createPeer(userId, socket.id, stream);
+							const peer = createPeer(socketId, socket.id, stream);
 
 							peer.userName = userName;
-							peer.peerID = userId;
+							peer.peerID = socketId;
+							peer.userId = userId;
 
 							peersRef.current.push({
-								peerID: userId,
+								peerID: socketId,
 								peer,
 								userName,
+								userId
 							});
 							peers.push(peer);
 
@@ -183,18 +190,20 @@ const Room = () => {
 				});
 
 				socket.on('FE-receive-call', ({ signal, from, info }) => {
-					let { userName, video, audio } = info;
+					let { userName, video, audio, userId } = info;
 					const peerIdx = findPeer(from);
 
 					if (!peerIdx) {
 						const peer = addPeer(signal, from, stream);
 
 						peer.userName = userName;
+						peer.userId = userId;
 
 						peersRef.current.push({
 							peerID: from,
 							peer,
 							userName: userName,
+							userId
 						});
 						setPeers((users) => {
 							return [...users, peer];
@@ -213,9 +222,9 @@ const Room = () => {
 					peerIdx.peer.signal(signal);
 				});
 
-				socket.on('FE-user-leave', ({ userId, userName }) => {
+				socket.on('FE-user-leave', ({ socketId, userName }) => {
 					console.log('FE-user-leave')
-					const peerIdx = findPeer(userId);
+					const peerIdx = findPeer(socketId);
 					peerIdx.peer.destroy();
 					setPeers((users) => {
 						users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
@@ -224,8 +233,8 @@ const Room = () => {
 				});
 			});
 
-		socket.on('FE-toggle-camera', ({ userId, switchTarget }) => {
-			const peerIdx = findPeer(userId);
+		socket.on('FE-toggle-camera', ({ socketId, switchTarget }) => {
+			const peerIdx = findPeer(socketId);
 
 			setUserVideoAudio((preList) => {
 				let video = preList[peerIdx.userName].video;
@@ -253,11 +262,11 @@ const Room = () => {
 			// window.history.back();
 			window.location.href = '/';
 		};
-	}, [roomId, curUser.fullname]);
+	}, [roomId, curUser.fullname, curUser._id]);
 	// }, [roomId, curUser.fullname, goToBack]);
 
 	// TODO: Сделать addOrCreatePeer
-	function createPeer(userId, caller, stream) {
+	function createPeer(socketId, caller, stream) {
 		const peer = new Peer({
 			initiator: true,
 			trickle: false,
@@ -266,7 +275,7 @@ const Room = () => {
 
 		peer.on('signal', (signal) => {
 			socket.emit('BE-call-user', {
-				userToCall: userId,
+				userToCall: socketId,
 				from: caller,
 				signal,
 			});
