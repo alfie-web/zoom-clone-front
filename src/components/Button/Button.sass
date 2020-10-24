@@ -94,9 +94,11 @@
 				fill: $violet
 
 	&--disabled
-		background-color: $gray
 		pointer-events: none
 		user-select: none
+
+		&:before
+			background: $gray !important
 
 		svg
 			fill: $gray !important

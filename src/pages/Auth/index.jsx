@@ -10,7 +10,7 @@ const Auth = () => {
 	if(isAuth) return <Redirect to="/rooms" />
 
 	return (
-		<main className="Auth">
+		<main className="Auth Page">
 			<section>
 				<div className="container">
 

@@ -45,12 +45,12 @@ function LoginForm({ signin }) {
 							<Field 
 								name="email" validate={validateEmail}
 								className="Input__element"
-								placeholder="Ваш E-mail"
+								placeholder="Электропочта"
 							/>
-							{/* <label>Ваш E-mail</label> */}
-							<div className="Input__line"></div>
-							
+
 							{errors.email && touched.email && <div className="Input__error-msg">{errors.email}</div>}
+							
+							<div className="Input__line"></div>
 						</div>
 
 				
@@ -65,12 +65,14 @@ function LoginForm({ signin }) {
 								type="password" 
 								validate={requiredPassword}
 								className="Input__element"
-								placeholder="Ваш пароль"
+								placeholder="Пароль"
 							/>
+
+							{errors.password && touched.password && <div className="Input__error-msg">{errors.password}</div>}
+							
 							{/* <label>Ваш пароль</label> */}
 							<div className="Input__line"></div>
 							
-							{errors.password && touched.password && <div className="Input__error-msg">{errors.password}</div>}
 						</div>
 
 						{/* Общая серверная ошибка */}
@@ -80,9 +82,9 @@ function LoginForm({ signin }) {
 						<Button 
 							className="Auth__form-btn"
 							disabled={isSubmitting}
-							variant="blue"
+							variant="violet"
 							type="submit"
-							text="Подтвердить"
+							text="Войти"
 						/>
 					</Form>
 				)}
@@ -92,5 +94,8 @@ function LoginForm({ signin }) {
 	)
 }
 
-export default connect(null, { signin: usersActions.signin })(LoginForm);
+export default connect(
+	null, 
+	{ signin: usersActions.signin 
+})(LoginForm);
 

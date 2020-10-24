@@ -96,6 +96,75 @@ section
 			text-decoration: underline
 
 
+.Input
+	position: relative
+	margin-bottom: 15px
+
+	&__element
+		$input: &
+		width: 100%
+		padding: 18px 0
+		border: none
+		outline: none
+		border-bottom: 2px solid $light
+		font: 24px $bold
+		background-color: transparent
+		color: $black
+		transition: border .2s
+		
+		&::placeholder
+			color: $black
+			transition: color .2s
+		&:focus
+			&::placeholder
+				color: $gray
+			
+			+ .Input__line
+				transform: scaleX(1)
+				transform-origin: bottom left	
+
+	&__line
+		position: absolute
+		bottom: 0
+		left: 0
+		height: 2px
+		width: 100%
+		background-color: $violet
+		transform: scaleX(0)
+		transform-origin: bottom right
+		transition: transform .2s
+
+
+
+
+	&__error-msg
+		position: absolute
+		font: 14px $bold
+		color: $red
+		margin-top: 3px
+
+		+ .Input__line
+			transform: scaleX(1)
+			transform-origin: bottom left	
+			background-color: $red
+
+
+	&-success
+		.input
+			border-bottom: 2px solid $violet !important
+			color: $violet
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 .Lazy
