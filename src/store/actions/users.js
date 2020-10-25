@@ -23,7 +23,7 @@ const usersActions = {
 			.catch(err => console.log(err))
 	},
 
-	signin: ({ email, password }, setFieldError ) => dispatch => {
+	signin: ({ email, password }, setFieldError) => dispatch => {
 		usersAPI.signin({ email, password })
 			.then(({ data }) => {
 				if (data.status !== 'success') return;
@@ -52,6 +52,18 @@ const usersActions = {
 		localStorage.removeItem('tokens');
 		axios.defaults.headers.common['token'] = '';
 	},
+
+	signup: ({ fullname, email, password, password2 }, setFieldError) => async dispatch => {
+		try {
+			const { data } = await usersAPI.signup({ fullname, email, password, password2 });
+			if (data.status !== 'success') return;
+
+			window.location = '/register/verify';
+
+		} catch ({ response }) {
+			response && setFieldError('commonMessage', response.data.message)		// Вывожу в formik ошибку регистрации с сервера
+		}
+	}
 }
 
 export default usersActions;

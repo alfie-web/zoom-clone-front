@@ -25,7 +25,7 @@ function App({ initialized, initializeApp, curUser, isAuth }) {
 				</Switch>
 				:
 				<Switch>
-					<Route exact path={['/', '/login']} component={AuthPage} />
+					<Route exact path={['/', '/login', '/register', '/register/verify']} component={AuthPage} />
 					<Redirect from="*" to="/" />
 				</Switch>
 			}

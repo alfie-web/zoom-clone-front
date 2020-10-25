@@ -47,6 +47,12 @@ const roomsReducer = (state = initialState, { type, payload }) => {
 				items: payload
 			}
 
+		case 'ROOMS:SET_IS_LAST_PAGE':
+			return {
+				...state,
+				isLastPage: payload
+			}
+
 		default: return state;
 	}
 }

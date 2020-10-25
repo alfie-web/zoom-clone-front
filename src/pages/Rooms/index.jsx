@@ -9,11 +9,11 @@ import { Button, RoomCard } from '../../components';
 import './Rooms.sass';
 
 
-const Rooms = ({ items, fetchRooms }) => {
+const Rooms = ({ items, fetchRooms, isLastPage }) => {
 
 	useEffect(() => {
-		!items.length && fetchRooms();
-	}, [items, fetchRooms])
+		!items.length && !isLastPage && fetchRooms();
+	}, [items, fetchRooms, isLastPage])
 
 
 	return (
@@ -50,7 +50,7 @@ const Rooms = ({ items, fetchRooms }) => {
 }
 
 export default connect(
-	({ rooms }) => ({ items: rooms.items }),
+	({ rooms }) => ({ items: rooms.items, isLastPage: rooms.isLastPage }),
 	{
 		fetchRooms: roomsActions.fetchRooms
 	}

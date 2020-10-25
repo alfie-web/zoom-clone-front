@@ -26,3 +26,19 @@ export function requiredPassword(value) {
 	}
 	return error;
 }
+
+export function confirmPassword(value, d) {
+	let error;
+	if (!value) {
+		error = "Подтвердите пароль";
+	}
+	return error;
+}
+
+export function requiredFullname(value) {
+	let error;
+	if (!value) {
+		error = "ФИО обязательно";
+	}
+	return error;
+}

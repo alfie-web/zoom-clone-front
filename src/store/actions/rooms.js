@@ -6,6 +6,11 @@ const roomsActions = {
 		payload: items
 	}),
 
+	setIsLastPage: isLastPage => ({
+		type: 'ROOMS:SET_IS_LAST_PAGE',
+		payload: isLastPage
+	}),
+
 	setIsFetching: isFetching => ({
 		type: 'ROOMS:SET_IS_FETCHING',
 		payload: isFetching
@@ -39,7 +44,8 @@ const roomsActions = {
 			const { data } = await roomsAPI.getAll();
 
 			if (data.status === 'success') {
-				dispatch(roomsActions.setRoomItems(data.data));
+				dispatch(roomsActions.setRoomItems(data.data.items));
+				dispatch(roomsActions.setIsLastPage(data.data.isLastPage));
 			}
 
 			dispatch(roomsActions.setIsFetching(false));
