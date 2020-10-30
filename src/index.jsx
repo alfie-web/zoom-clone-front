@@ -5,15 +5,20 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from './store/store';
+// import { ConfigProvider } from 'antd';
+// import ruRU from 'antd/lib/locale/ru_RU';
 
 import './layouts/fonts.sass';
 import './layouts/main.sass';
+
 
 ReactDOM.render(
 	// <React.StrictMode>
 		<Router>
 			<Provider store={store}>
-				<App />
+				{/* <ConfigProvider locale={ruRU}> */}
+					<App />
+				{/* </ConfigProvider> */}
 			</Provider>
 		</Router>
 	// </React.StrictMode>

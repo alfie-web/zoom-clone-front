@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 
-const RoomCard = ({ title = "", usersCount, date, _id }) => {
+const RoomCard = memo(({ title = "", usersCount, date, time, _id }) => {
+	console.log(date)
 	return (
 		<div className="RoomCard">
 			<h3 className="title--small RoomCard__title">
@@ -25,10 +26,13 @@ const RoomCard = ({ title = "", usersCount, date, _id }) => {
 					<path d="M9.52344 18.1484C10.0196 18.1484 10.4219 17.7462 10.4219 17.25C10.4219 16.7538 10.0196 16.3516 9.52344 16.3516C9.02724 16.3516 8.625 16.7538 8.625 17.25C8.625 17.7462 9.02724 18.1484 9.52344 18.1484Z" />
 					<path d="M9.52344 10.332C10.0196 10.332 10.4219 9.92979 10.4219 9.43359C10.4219 8.9374 10.0196 8.53516 9.52344 8.53516C9.02724 8.53516 8.625 8.9374 8.625 9.43359C8.625 9.92979 9.02724 10.332 9.52344 10.332Z" />
 				</svg>
-				<span>{dayjs(date).locale('ru').format('D MMMM, hh:mm')}</span>
+				<span>
+					{dayjs(date.split('-').reverse().join('-')).locale('ru').format('D MMMM')}
+					<span>, {time}</span>
+				</span>
 			</div>
 		</div>
 	)
-}
+})
 
 export default RoomCard;

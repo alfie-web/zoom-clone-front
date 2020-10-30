@@ -3,7 +3,8 @@ import{ Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { appActions } from './store/actions';
-import { AuthPage, RoomsPage, RoomPage } from './pages';
+import { Header } from './components';
+import { AuthPage, RoomsPage, RoomPage, CreateEditRoomPage } from './pages';
 
 function App({ initialized, initializeApp, curUser, isAuth }) {
 
@@ -15,11 +16,13 @@ function App({ initialized, initializeApp, curUser, isAuth }) {
 
 	return (
 		<div className="App">
+			<Header />
 
 			{ isAuth ?
 				<Switch>
 					<Route exact path={['/', '/login']} component={AuthPage} />
 					<Route exact path="/rooms" component={RoomsPage} />
+					<Route exact path={["/rooms/create", "/rooms/edit/:roomId"]} component={CreateEditRoomPage} />
 					<Route exact path="/rooms/:roomId" component={RoomPage} />
 					<Redirect from="*" to="/" />
 				</Switch>
